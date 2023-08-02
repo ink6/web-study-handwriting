@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function _instanceof(obj, classFn) {
+      if (typeof obj !== 'object' || !obj) return false
+      const _proto = Object.getPrototypeOf(obj) // obj.__proto__
+      
+      // return _instanceof(_proto, classFn)
+      while(true) {
+        if (obj.__proto__ == null) return false
+        if (obj.__proto__ == classFn.prototype) return true
+        obj.__proto__ = obj.__proto__.__proto__
+      }
+    }
+
+    class Person {}
+    const p = new Person()
+    const o = new Object()
+    console.log(p instanceof Object);
+    console.log(_instanceof(p, Object));
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>浅克隆</title>
+</head>
+<body></body>
+<script>
+  {
+    // 浅克隆：只拷贝对象或数组的第一层内容
+
+    function shallowClone (oriObj) {
+      if (oriObj == null || typeof oriObj !== 'object') return oriObj
+      let tarObj = Array.isArray(oriObj) ? []: {}
+      for(let i in oriObj) {
+        if (Object.prototype.hasOwnProperty.call(oriObj, i)) { // 遍历对象自身可枚举属性（不考虑继承属性和原型对象）
+          tarObj[i] = oriObj[i]
+        }
+      }
+      return tarObj
+    }
+    let obj = { 
+      info: {
+        height: 180,
+        hobby: {
+          football: true
+        }
+      }
+    }
+    let objClo = shallowClone(obj)
+    objClo.info.hobby.football = false
+    console.log(obj, objClo)
+  }
+</script>
+</html>

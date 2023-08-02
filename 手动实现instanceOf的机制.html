@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>instanceOf的机制</title>
+</head>
+<body></body>
+<script>
+  /*
+  步骤1：先取得当前类的原型，当前实例对象的原型链
+  ​步骤2：一直循环（执行原型链的查找机制）
+
+  取得当前实例对象的原型链（proto = proto.____proto____，沿着原型链一直向上查找）
+  如果 当前实例的原型链____proto__上找到了当前类的原型prototype，则返回 true
+  如果 一直找到Object.prototype.____proto____ ==  null，Object的基类(null)上面都没找到，则返回 false
+  */
+
+  function Person (name) {
+    this.name = name
+  }
+  function Person1 (name) {
+    this.name = name
+  }
+  // ERROR ME 没有沿着原型链一直向上查找 所以会存在 继承类找不到出现问题
+  // function _instanceof (opeObj, classFn) {
+  //   // 实现 opeObj instanceof classFn
+  //   let _flag = false
+  //   let proto = opeObj.__proto__
+  //   let classFnProto = classFn.prototype
+  //   if (proto === classFnProto) {
+  //     _flag = true
+  //   }
+  //   return  _flag
+  // }
+
+// 循环的方式
+  function _instanceof (opeObj, classFn) {
+    // 实现 opeObj instanceof classFn
+    let _flag = false
+    // let proto = opeObj.__proto__ //取得当前实例对象的原型链
+    let proto = Object.getPrototypeOf(opeObj) //!!!!!! 兼容性写法 Object.getPrototypeOf ( )：用来获取某个实例对象的原型（内部[[prototype]]属性的值，包含proto属性）
+    let classFnProto = classFn.prototype  // 取得当前类的原型
+    while(true) {
+      if (proto === null) return _flag// 找到了 Object的基类 Object.prototype.__proto__
+      if (proto === classFnProto) { // 在当前实例对象的原型链上，找到了当前类
+        return _flag = true
+      }
+      proto = proto.__proto__
+      // 等价于 opeObj.__proto__ =  opeObj.__proto__.__proto__
+      // 等价于 proto = Object.getPrototypeOf(proto)
+    }
+    return  _flag
+  }
+  // 递归的方式
+  // function _instanceof(obj, classFn) {
+  //   if (typeof obj !== 'object' || !obj) return false
+  //   const _proto = Object.getPrototypeOf(obj)
+  //   if (_proto == null) return false
+  //   if (_proto == classFn.prototype) return true
+  //   return _instanceof(_proto, classFn)
+  // }
+
+  let p = new Person('ink')
+  let p1 = new Person1('ink')
+  let flag =  _instanceof(p, Person)
+  let flag1 =  _instanceof(p1, Person1)
+  let flag2 =  _instanceof(p1, Object)
+  let flags =  _instanceof(p1, Person)
+  console.log(flag, flag1, flag2, flags) 
+</script>
+</html>

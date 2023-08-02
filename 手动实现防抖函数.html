@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>防抖</title>
+</head>
+<body>
+  <button id="debounce" >防抖1</button>
+  <button id="debounce1" >防抖2</button>
+  <button id="btn" onclick="debounce(fun1, 2000)">防抖3</button>
+</body>
+<script>
+function debounce(fn, wait) {
+    let task = null;
+    // return function () {
+    //   clearTimeout(task);
+    //   task = setTimeout(() => {
+    //     console.log('this', this);
+    //     fn.apply(this, arguments);
+    //   }, wait);
+    // }
+    let a =  function () {
+      clearTimeout(task);
+      task = setTimeout(() => {
+        console.log('this', this);
+        // fn.bind(this, arguments);
+        fn.apply(this, arguments);
+      }, wait);
+    }
+    return a
+}
+
+function fun1() {
+    console.log('函数执行了');
+}
+// 1
+var btn1 = document.getElementById('debounce');
+btn1.addEventListener("click", debounce(fun1, 2000))
+
+// 2
+var btn1 = document.getElementById('debounce1');
+// btn1.onclick = function() {
+//   debounce(fun1, 2000)
+// }
+btn1.onclick = debounce(fun1, 2000)
+
+// 3
+function changeHandFn1 () {
+  debounce(fun1, 2000)
+}
+
+</script>
+</html>
