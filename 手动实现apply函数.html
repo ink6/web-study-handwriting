@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>apply</title>
+</head>
+<body>
+  <script>
+    //方法一 使用原型拓展
+    Function.prototype._apply = function(obj = window, args = []) {
+      if (typeof this !== "function") throw new Error('借调的值必须是一个函数') // 判断调用对象是否为函数
+      if (args && !Array.isArray(args)) throw new Error('apply的第二个参数必须是一个数组')
+    
+      obj.fun = this // 在原型上增加_apply 方法 this就是调用者 此处就是fn
+      const res = obj.fun(...args) // 执行函数
+      delete obj.fun// 删除属性
+      return res
+    }
+
+    function fn() {
+      console.log(this, arguments);
+    }
+    const obj = {
+      a: 1,
+      fun:fn
+    }
+    // fn([1,2,3])
+    obj.fun([1,2,3])
+    fn.apply(obj,[1,2,3])
+    fn._apply(obj, [1,2,3])
+    // fn._apply(obj)
+    // fn._apply(obj, 1,2,3)
+  </script>
+</body>
+</html>

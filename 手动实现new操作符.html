@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>new</title>
+</head>
+<body>
+  <script>
+    function _new(Fn, ...args) {
+      if (typeof Fn !== 'function') return new Error('type error') // 判断第一个参数是否是一个函数
+      // const _obj = {} //创建一个新对象
+      // _obj.__proto__ = Fn.prototype //新对象原型指向构造函数原型对象
+      const _obj = Object.create(Fn.prototype) //优化版：__proto__兼容性较差 新建一个空对象，对象的原型为构造函数的 prototype 对象
+      const res = Fn.apply(_obj, args) //将构建函数的this指向新对象并调用fn
+      // console.log(res, _obj);
+      return res instanceof Object ? res: _obj //根据返回值判断 如果调用结果是一个对象 则返回这个对象
+    }
+
+    function Person(name,age) {
+      this.name = name
+      this.age = age
+      // return undefined
+      // return this
+      // return {
+      //   a: 1
+      // }
+      // return null
+    }
+    const p = new Person('温蒂', 18)
+    console.log(p);
+    const p1 = _new(Person, '甘雨', 16)
+    console.log(p1);
+
+  </script>
+</body>
+</html>

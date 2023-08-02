@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>call</title>
+</head>
+<body>
+  <script>
+    //#region 
+    //方法一 使用原型拓展
+    Function.prototype._call = function(obj = window, ...args) { // obj未传的时候给window值
+      if (typeof this !== "function") throw new Error('借调的值必须是一个函数') // 判断调用对象是否为函数，即使我们是定义在函数的原型上的，但是可能出现使用 call 等方式调用的情况。
+      obj.fun = this // 在原型上增加_call 方法 this就是调用者 此处就是fn
+      // console.log(args, ...args);
+      const res = obj.fun(...args) // 执行函数
+      delete obj.fun// 删除属性
+      return res
+    }
+    //#endregion
+
+    //方法二 自定义call方法， 缺点：需要将当前对象和借调的对象都作为参数传递
+    function _call1(obj, fn, ...args) {
+      obj.fun = fn
+      const res = obj.fun(...args)
+      delete obj.fun
+      return res
+    }
+    function fn() {
+      console.log(this, arguments);
+    }
+    const obj = {
+      a: 1,
+      fun:fn
+    }
+    // fn(1,2,3)
+    // obj.fun(1,2,3)
+    fn.call(obj, 1,2,3)
+    fn._call(obj, 1,2,3)
+    fn._call(obj)
+    _call1(obj,fn, 1,2,3)
+  </script>
+</body>
+</html>

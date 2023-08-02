@@ -7,7 +7,6 @@
 </head>
 <body>
   <script>
-    //方法一 使用原型拓展
     Function.prototype._bind = function(obj = window, ...argsF) {
       if (typeof this !== "function") throw new Error('借调的值必须是一个函数') // 判断调用对象是否为函数
       const _self = this //fn
@@ -16,7 +15,7 @@
         // const res = _self.call(obj,...[...args, ...argsF]) // 执行函数
         // return res
 
-        // _self.call(obj,...[...args, ...argsF])
+        // 自己实现
         obj.fun = _self
         const res = obj.fun(...[...args, ...argsF])
         return res
