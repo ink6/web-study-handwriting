@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实现 add(1)(2)(3)</title>
+</head>
+
+<body>
+  函数柯里化概念： 柯里化（Currying）是把接受多个参数的函数转变为接受一个单一参数的函数，并且返回接受余下的参数且返回结果的新函数的技术。
+  <script>
+    // function add(a) {
+    //   return function(b) {
+    //     return function(c) {
+    //       return a+b+c
+    //     }
+    //   }
+    // }
+
+    // 函数柯里化封装 - 固定参数个数 
+    function currying(fn, args = []) {
+      let length = fn.length // 函数的length就是参数的个数
+      let paramsArr = [] // 用于存储调用的参数集合
+      return function () {
+        paramsArr = paramsArr.concat(...arguments, ...args)
+        if (paramsArr.length < length) {
+          return curry.call(this, fn, paramsArr)
+        } else {
+          return fn.apply(this, paramsArr)
+        }
+      }
+    }
+
+    //函数柯里化封装 - 参数长度不固定
+    function curry(fn) {
+      let newArr = []
+      return function temp(...args) {
+        if (args.length) {
+          newArr = [
+            ...newArr,
+            ...args
+          ]
+          return temp
+        } else {
+          const res = fn.apply(this, newArr)
+          newArr = []
+          return res
+        }
+      }
+    }
+
+    //需要被柯里化的函数
+    function multiFn(...args) {
+      return args.reduce((prev, curr) => prev + curr)
+    }
+    //multi是柯里化之后的函数
+    var multi = curry(multiFn);
+    // console.log(multi(1));
+    console.log(multi(2)(3)(2)(3)(2)(3)(2)(3)());
+    // console.log(multi(1)(2)(3));
+    // console.log(multi(2, 3, 4));
+    // console.log(multi(2)(3, 4));
+    // console.log(multi(2, 3)(4));
+
+
+    // console.log(add(3)(4)(5)()); // 12
+    // console.log(add(3)(6)(9)(25)); // 43
+
+    // console.log(add(1)(2)(3)); // 6
+    // console.log(add(1)(2)(3)); // 6
+  </script>
+</body>
+
+</html>

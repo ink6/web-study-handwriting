@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实现数组去重</title>
+</head>
+<body>
+  <script>
+    // 数组里面是一些对象，怎么去重
+    var arr = [{
+      key: '01',
+      value: '西施'
+    }, {
+      key: '02',
+      value: '王昭君'
+    }, {
+      key: '03',
+      value: '杨玉环'
+    }, {
+      key: '04',
+      value: '貂蝉'
+    }, {
+      key: '01',
+      value: '西施'
+    }, {
+      key: '01',
+      value: '西施222'
+    }];
+
+    // way1 使用对象key值唯一性 key值相同则去除
+    let result = []
+    let obj = {}
+    arr.map((item, index) => {
+      // console.log(item, item.key, item.value)
+      if (!obj[item.key]) {
+        obj[item.key] = item.value
+        result.push({
+          [item.key]: item.value
+        })
+      }
+    })
+    console.log(arr, result)
+
+    // // way2 es5冒泡排序法，去重arr
+    // for(let i = 0; i < arr.length - 1; i ++ ) {
+    //   for(let j = i + 1; j < arr.length; j ++ ) {
+    //     console.log(i, arr[i], arr[j])
+    //     if (arr[i].key == arr[j].key && arr[i].value == arr[j].value) {
+    //       arr.splice(i, 1)
+    //       //因为数组长度减小1，所以直接 j++ 会漏掉一个元素，所以要 j--
+    //       j--
+    //     }
+    //   }
+    // }
+    // console.log(arr)
+
+    // way3 es6的Map() key相同的进行删除
+    // let map = new Map()
+    // for(let i in arr) {
+    //   console.log(arr[i], i)
+    //   if(!map.has(arr[i].key)) {
+    //     map.set(arr[i].key, arr[i])
+    //   }
+    // }
+    // console.log(map, [...map.values()])
+    
+    // // way4 es5新建数据双重循环，去重arr2
+    // let temp = []
+    // arr.map(item => {
+    //   let res = temp.every(itm => item.key !== itm.key && item.value !== itm.value)
+    //   res? temp.push(item): ''
+    // })
+    // console.log(temp)
+    
+    // way5 
+    // let arr = [1,2,2,3,2,1,2,3,4,5,6,7]
+    // console.log([...new Set(arr)]); //ES6方法（使用数据结构集合)
+  </script>
+</body>
+</html>

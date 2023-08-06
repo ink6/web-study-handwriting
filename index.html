@@ -2,40 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>bind</title>
+  <title>扁平数据结构转Tree</title>
 </head>
 <body>
   <script>
-    //方法一 使用原型拓展
-    Function.prototype._bind = function(obj = window, ...argsF) {
-      if (typeof this !== "function") throw new Error('借调的值必须是一个函数') // 判断调用对象是否为函数
-      const _self = this //fn
-      return function (...args) {
-        //使用call来协助完成
-        // const res = _self.call(obj,...[...args, ...argsF]) // 执行函数
-        // return res
+    {
+      // 将扁平化数据进行树状化
+      let arr = [
+        {id: 1, name: '部门1', pid: 0},
+        {id: 2, name: '部门2', pid: 1},
+        {id: 4, name: '部门4', pid: 3},
+        {id: 3, name: '部门3', pid: 1},
+        {id: 5, name: '部门5', pid: 4},
+        {id: 6, name: '部门5', pid: 9},
+      ]
+      // let itemMap = {
+      //   1: {id: 1, name: '部门1', pid: 0},
+      //   2: {id: 2, name: '部门2', pid: 1},
+      //   3: {id: 3, name: '部门3', pid: 1},
+      //   4: {id: 4, name: '部门4', pid: 3},
+      //   5: {id: 5, name: '部门5', pid: 4},
+      // }
 
-        // _self.call(obj,...[...args, ...argsF])
-        obj.fun = _self
-        const res = obj.fun(...[...args, ...argsF])
-        return res
+      function arrayToTree(arr) {
+        let mapArr = new Object()
+        let resArr = []
+        arr.map(item => {
+          mapArr[item.id] = { ...item, children: []}
+        })
+        arr.map(item => {
+          if (item.pid == 0) {
+            resArr.push(mapArr[item.id])
+          } else {
+            mapArr[item.pid]?.children.push(mapArr[item.id])
+          }
+        })
+        return resArr
       }
+      const resArr = arrayToTree(arr)
+      console.log('最终的结果', resArr, arr);
     }
-
-    function fn() {
-      console.log(this, arguments);
-    }
-    const obj = {
-      a: 1,
-      fun:fn
-    }
-    // fn(1,2,3)
-    // obj.fun(1,2,3)
-    fn.bind(obj)(1,2,3)
-    fn._bind(obj)(1,2,3)
-    // fn._bind(obj)
-    // fn._bind(obj, 1,2,3)
   </script>
 </body>
 </html>

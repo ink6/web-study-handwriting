@@ -7,7 +7,6 @@
 </head>
 <body>
   <script>
-    //方法一 使用原型拓展
     Function.prototype._apply = function(obj = window, args = []) {
       if (typeof this !== "function") throw new Error('借调的值必须是一个函数') // 判断调用对象是否为函数
       if (args && !Array.isArray(args)) throw new Error('apply的第二个参数必须是一个数组')

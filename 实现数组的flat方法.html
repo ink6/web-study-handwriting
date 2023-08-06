@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>flat</title>
+</head>
+
+<body>
+  <script>
+    //  ME 需要借助额外的数组存储flat后的值
+    let newArr = []
+    function flat(arr, depth=1) {
+      if (!Array.isArray(arr)) throw new Error('flat参数必须是数组')
+      arr.map(item => {
+        if (!Array.isArray(item) || depth <= 0 ) {
+          return newArr.push(item)
+        } else {
+          return flat(item, --depth)
+        }
+      })
+    }
+    function flat1(arr, depth=1) {
+      let resArr = []
+      if (!Array.isArray(arr)) throw new Error('flat参数必须是数组')
+      arr.map(item => {
+        if (!Array.isArray(item) || depth <= 0 ) {
+          resArr.push(item)
+        } else {
+          // resArr = resArr.concat(flat(item));
+          resArr = [...resArr, ...flat1(item, --depth)]
+        }
+      })
+      return resArr
+    }
+    // 使用reduce的结果作为flat后的值
+    function _flat(arr, depth=1) {
+      if (!Array.isArray(arr) || depth <= 0 ) return arr
+      const res = arr.reduce((prev,cur) => {
+        if (!Array.isArray(cur)) {
+          return prev.concat(cur)
+        } else {
+          return prev.concat(_flat(cur, --depth))
+        }
+      }, [])
+      return res
+    }
+
+    let arr = [1,2,[3,4,[5,6,[7,8, [9,10]]]]]
+    flat(arr, 3)
+    console.log(newArr);
+    console.log(flat1(arr, 3));
+    console.log(arr.flat(3));
+    console.log(_flat(arr, 3));
+  </script>
+</body>
+
+</html>

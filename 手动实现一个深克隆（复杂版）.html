@@ -19,6 +19,7 @@
         return target
       }
       let constructor = target.constructor
+      console.log(constructor.name);
       // 检测当前对象target是否与 正则、日期格式对象匹配
       if (/^(RegExp|Date)$/i.test(constructor.name)) {
         return new constructor(target); // 创建一个新的特殊对象(正则类/日期类)的实例

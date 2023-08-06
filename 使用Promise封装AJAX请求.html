@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ajax</title>
+</head>
+<body>
+  <script>
+    function ajax(url) {
+      // 创建一个 promise 对象
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+      // 新建一个 http 请求
+        xhr.open('get', url, false)
+        // 设置状态的监听函数
+        xhr.onreadystatechange = function() {
+          if (this.readyState != 4) return
+          // 当请求成功或失败时，改变 promise 的状态
+          if(this.status == 200) {
+            resolve({ code: '200', data: this.response})
+          } else {
+            reject({ code: '0000', data: this.statusText})
+          }
+        }
+        // 设置错误监听函数
+        xhr.onerror = function() {
+          reject({ code: '0000', data: this.statusText})
+        }
+        // 设置响应的数据类型
+        xhr.responseType = 'json'
+        // 设置请求头信息
+        xhr.setRequestHeader('Accept', 'application/json')
+        // 发送 http 请求
+        xhr.send(null)
+      })
+    }
+    const url = 'http://localhost:5000/search/users2'
+    ajax(url)
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  </script>
+</body>
+</html>

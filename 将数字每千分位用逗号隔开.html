@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>将数字每千分位用逗号隔开</title>
+</head>
+
+<body>
+  <script>
+    function splitStr(num = 0) {
+      let arr = []
+      let str = num.toString()
+      let count = 0
+      for (let index = str.length - 1; index > -1; index--) {
+        count++
+        if (count % 3 == 0) {
+          arr = [',', str[index], ...arr]
+        } else {
+          arr = [str[index], ...arr]
+        }
+        // console.log(index, str[index], count, arr);
+      }
+      if (arr[0] == ',') arr.splice(0, 1)
+      return arr.join('')
+    }
+
+
+    function splitStr1(num = 0) {
+      let str = num.toString()
+      let _str = ''
+      while (str.length) {
+        _str = ',' + str.slice(-3) + _str
+        str = str.slice(0, -3)
+      }
+      if (_str.startsWith(',')) _str = _str.slice(1)
+      return _str
+    }
+
+    function toThousands(num) {
+      return (num || 0).toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+    }
+
+    console.log(splitStr(12345678));
+    console.log(splitStr1(12345678));
+    console.log(toThousands(12345678));
+  </script>
+</body>
+
+</html>
