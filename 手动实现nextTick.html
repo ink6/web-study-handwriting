@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手动实现nextTick</title>
+</head>
+
+<body></body>
+<script>
+  const callbacks = []
+  let pending = false
+
+  const flushCallbacks = () => {
+    pending = false;
+    if (callbacks && callbacks.length !== 0) {
+      const eventList = [...callbacks];
+      callbacks.length = 0;
+      eventList.forEach(func => {
+        func()
+      })
+    }
+  }
+
+  const timeFunc = () => {
+    if (typeof Promise !== 'undefined') { // 走微任务
+      Promise.resolve().then(() => {
+        flushCallbacks()
+      })
+    } else { // 走宏任务
+      setTimeout(() => { // ie中使用setImmediate代替  或 使用 new MessageChannel() https://blog.csdn.net/weixin_43294560/article/details/122954225
+        flushCallbacks()
+      }, 0);
+    }
+  }
+
+  export const nextTick = (cb) => {
+    if (cb) {
+      callbacks.push(() => {
+        cb()
+      })
+    }
+    if (!pending) {
+      pending = true
+      timeFunc()
+    }
+  }
+</script>
+
+</html>

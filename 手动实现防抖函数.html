@@ -1,69 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>防抖</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>防抖</title>
 </head>
+
 <body>
-  <button id="debounce" >防抖1</button>
-  <button id="debounce1" >防抖2</button>
-  <button id="btn" onclick="debounce(fun1, 2000)">防抖3</button>
+    <button id="debounce">防抖1</button>
+    <button id="debounce1">防抖2</button>
+    <button id="btn" onclick="debounce(fun1, 2000)">防抖3</button>
 </body>
 <script>
-// 第六版
-function debounce(func, wait, immediate) {
+    // 第六版
+    function debounce(func, wait, immediate) {
 
-var timeout, result;
+        var timeout, result;
 
-var debounced = function () {
-    var context = this;
-    var args = arguments;
+        var debounced = function () {
+            var context = this;
+            var args = arguments;
 
-    if (timeout) clearTimeout(timeout);
-    if (immediate) {
-        // 如果已经执行过，不再执行
-        var callNow = !timeout;
-        timeout = setTimeout(function(){
+            if (timeout) clearTimeout(timeout);
+            if (immediate) {
+                // 如果已经执行过，不再执行
+                var callNow = !timeout;
+                timeout = setTimeout(function () {
+                    timeout = null;
+                }, wait)
+                if (callNow) result = func.apply(context, args)
+            } else {
+                timeout = setTimeout(function () {
+                    func.apply(context, args)
+                }, wait);
+            }
+            return result;
+        };
+
+        debounced.cancel = function () {
+            clearTimeout(timeout);
             timeout = null;
-        }, wait)
-        if (callNow) result = func.apply(context, args)
+        };
+
+        return debounced;
     }
-    else {
-        timeout = setTimeout(function(){
-            func.apply(context, args)
-        }, wait);
+
+    function fun1() {
+        console.log('函数执行了');
     }
-    return result;
-};
+    // 1
+    var btn1 = document.getElementById('debounce');
+    btn1.addEventListener("click", debounce(fun1, 2000))
 
-debounced.cancel = function() {
-    clearTimeout(timeout);
-    timeout = null;
-};
+    // 2
+    var btn1 = document.getElementById('debounce1');
+    // btn1.onclick = function() {
+    //   debounce(fun1, 2000)
+    // }
+    btn1.onclick = debounce(fun1, 2000)
 
-return debounced;
-}
-
-function fun1() {
-    console.log('函数执行了');
-}
-// 1
-var btn1 = document.getElementById('debounce');
-btn1.addEventListener("click", debounce(fun1, 2000))
-
-// 2
-var btn1 = document.getElementById('debounce1');
-// btn1.onclick = function() {
-//   debounce(fun1, 2000)
-// }
-btn1.onclick = debounce(fun1, 2000)
-
-// 3
-function changeHandFn1 () {
-  debounce(fun1, 2000)
-}
-
+    // 3
+    function changeHandFn1() {
+        debounce(fun1, 2000)
+    }
 </script>
+
 </html>
